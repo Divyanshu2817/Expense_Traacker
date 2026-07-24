@@ -1,0 +1,219 @@
+{
+  "transactions": [
+    {
+      "id": "1",
+      "description": "Tech Corp Salary",
+      "amount": 5200,
+      "type": "income",
+      "category": "Salary",
+      "date": "2026-07-01",
+      "isRecurring": true,
+      "tags": [
+        "Work",
+        "Payroll"
+      ]
+    },
+    {
+      "id": "2",
+      "description": "Freelance UI/UX Design",
+      "amount": 1450,
+      "type": "income",
+      "category": "Freelance",
+      "date": "2026-07-12",
+      "isRecurring": false,
+      "tags": [
+        "Client",
+        "SideHustle"
+      ]
+    },
+    {
+      "id": "3",
+      "description": "Luxury Apartment Rent",
+      "amount": 1800,
+      "type": "expense",
+      "category": "Housing",
+      "date": "2026-07-02",
+      "isRecurring": true,
+      "tags": [
+        "Rent",
+        "Fixed"
+      ]
+    },
+    {
+      "id": "4",
+      "description": "Organic Grocery Supermarket",
+      "amount": 245.5,
+      "type": "expense",
+      "category": "Food & Groceries",
+      "date": "2026-07-05",
+      "isRecurring": false,
+      "tags": [
+        "Essential"
+      ]
+    },
+    {
+      "id": "5",
+      "description": "Netflix 4K Ultra Subscription",
+      "amount": 22.99,
+      "type": "expense",
+      "category": "Subscriptions",
+      "date": "2026-07-07",
+      "isRecurring": true,
+      "tags": [
+        "Entertainment"
+      ]
+    },
+    {
+      "id": "6",
+      "description": "Spotify Duo Premium",
+      "amount": 14.99,
+      "type": "expense",
+      "category": "Subscriptions",
+      "date": "2026-07-10",
+      "isRecurring": true,
+      "tags": [
+        "Music"
+      ]
+    },
+    {
+      "id": "7",
+      "description": "Electricity & High-Speed Internet",
+      "amount": 165,
+      "type": "expense",
+      "category": "Utilities",
+      "date": "2026-07-08",
+      "isRecurring": true,
+      "tags": [
+        "Bills"
+      ]
+    },
+    {
+      "id": "8",
+      "description": "Fine Dining & Sushi Bar",
+      "amount": 185,
+      "type": "expense",
+      "category": "Dining Out",
+      "date": "2026-07-14",
+      "isRecurring": false,
+      "tags": [
+        "Leisure"
+      ]
+    },
+    {
+      "id": "9",
+      "description": "ChatGPT Plus & Claude Pro",
+      "amount": 40,
+      "type": "expense",
+      "category": "Subscriptions",
+      "date": "2026-07-15",
+      "isRecurring": true,
+      "tags": [
+        "AI",
+        "Work"
+      ]
+    },
+    {
+      "id": "10",
+      "description": "Equinox Gym Membership",
+      "amount": 150,
+      "type": "expense",
+      "category": "Fitness & Health",
+      "date": "2026-07-16",
+      "isRecurring": true,
+      "tags": [
+        "Health"
+      ]
+    },
+    {
+      "id": "11",
+      "description": "Uber Rides & Airport Express",
+      "amount": 94.2,
+      "type": "expense",
+      "category": "Transportation",
+      "date": "2026-07-18",
+      "isRecurring": false,
+      "tags": [
+        "Travel"
+      ]
+    },
+    {
+      "id": "12",
+      "description": "Stock Dividend Payout",
+      "amount": 320,
+      "type": "income",
+      "category": "Investments",
+      "date": "2026-07-20",
+      "isRecurring": true,
+      "tags": [
+        "Passive"
+      ]
+    }
+  ],
+  "budgets": [
+    {
+      "id": "b1",
+      "category": "Housing",
+      "monthlyLimit": 2000,
+      "alertThreshold": 90
+    },
+    {
+      "id": "b2",
+      "category": "Food & Groceries",
+      "monthlyLimit": 600,
+      "alertThreshold": 80
+    },
+    {
+      "id": "b3",
+      "category": "Subscriptions",
+      "monthlyLimit": 100,
+      "alertThreshold": 85
+    },
+    {
+      "id": "b4",
+      "category": "Dining Out",
+      "monthlyLimit": 300,
+      "alertThreshold": 75
+    },
+    {
+      "id": "b5",
+      "category": "Utilities",
+      "monthlyLimit": 250,
+      "alertThreshold": 90
+    },
+    {
+      "id": "b6",
+      "category": "Transportation",
+      "monthlyLimit": 200,
+      "alertThreshold": 80
+    }
+  ],
+  "goals": [
+    {
+      "id": "g1",
+      "title": "Japan Travel Fund",
+      "targetAmount": 4500,
+      "currentAmount": 2850,
+      "targetDate": "2026-11-15",
+      "category": "Travel",
+      "icon": "Plane"
+    },
+    {
+      "id": "g2",
+      "title": "Emergency Savings (6 Mo)",
+      "targetAmount": 15000,
+      "currentAmount": 11200,
+      "targetDate": "2026-12-31",
+      "category": "Savings",
+      "icon": "ShieldCheck"
+    },
+    {
+      "id": "g3",
+      "title": "M3 MacBook Pro Upgrade",
+      "targetAmount": 2800,
+      "currentAmount": 1900,
+      "targetDate": "2026-09-30",
+      "category": "Gadgets",
+      "icon": "Laptop"
+    }
+  ]
+}
