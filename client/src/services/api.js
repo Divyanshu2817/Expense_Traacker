@@ -1,4 +1,6 @@
-const API_BASE = '/api';
+// In production (Render), VITE_API_URL is set to the backend Render URL.
+// In local dev, Vite proxies /api → http://localhost:5000 via vite.config.js.
+const API_BASE = import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/api` : '/api';
 
 const getHeaders = () => {
   const user = JSON.parse(localStorage.getItem('aurafinance_user') || 'null');

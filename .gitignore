@@ -1,0 +1,9 @@
+node_modules/
+server/data_fallback.json
+server/.env
+client/.env
+.env
+*.log
+dist/
+.DS_Store
+Thumbs.db
