@@ -44,6 +44,25 @@ app.use('/api/budgets', budgetRoutes);
 app.use('/api/goals', goalRoutes);
 app.use('/api/analytics', analyticsRoutes);
 
+// Root — friendly API welcome page (so visiting the bare URL doesn't show "Not Found")
+app.get('/', (req, res) => {
+  res.json({
+    app: '💎 AuraFinance API',
+    status: 'online',
+    version: '1.0.0',
+    message: 'Backend is running. Use /api/* endpoints.',
+    endpoints: {
+      health: '/api/health',
+      auth: '/api/auth/login | /api/auth/register',
+      transactions: '/api/transactions',
+      budgets: '/api/budgets',
+      goals: '/api/goals',
+      analytics: '/api/analytics/summary | /api/analytics/health | /api/analytics/subscriptions'
+    },
+    timestamp: new Date().toISOString()
+  });
+});
+
 // Health Check Endpoint
 app.get('/api/health', (req, res) => {
   res.json({
