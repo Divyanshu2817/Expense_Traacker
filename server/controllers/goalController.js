@@ -4,7 +4,7 @@ import { memoryStore } from '../utils/store.js';
 
 export const getGoals = async (req, res) => {
   try {
-    const userId = req.headers['x-user-id'] || 'u1';
+    const userId = req.userId;
     if (isMongoConnected) {
       const goals = await Goal.find({ userId });
       return res.json({ success: true, data: goals });
@@ -18,7 +18,7 @@ export const getGoals = async (req, res) => {
 
 export const createGoal = async (req, res) => {
   try {
-    const userId = req.headers['x-user-id'] || 'u1';
+    const userId = req.userId;
     const { title, targetAmount, currentAmount, targetDate, category, icon } = req.body;
     if (!title || !targetAmount || !targetDate) {
       return res.status(400).json({ success: false, error: 'Title, target amount, and date are required.' });
@@ -53,17 +53,21 @@ export const updateGoalProgress = async (req, res) => {
     const { currentAmount } = req.body;
 
     if (isMongoConnected) {
-      const item = await Goal.findByIdAndUpdate(id, { currentAmount: Number(currentAmount) }, { new: true });
+      // Bug 5 fix: check if goal was actually found before returning success
+      const item = await Goal.findByIdAndUpdate(
+        id,
+        { currentAmount: Number(currentAmount) },
+        { new: true }
+      );
+      if (!item) return res.status(404).json({ success: false, error: 'Goal not found' });
       return res.json({ success: true, data: item });
     }
 
     const idx = memoryStore.goals.findIndex(g => g.id === id || g._id === id);
-    if (idx !== -1) {
-      memoryStore.goals[idx].currentAmount = Number(currentAmount);
-      memoryStore.saveToFile();
-      return res.json({ success: true, data: memoryStore.goals[idx] });
-    }
-    return res.status(404).json({ success: false, error: 'Goal not found' });
+    if (idx === -1) return res.status(404).json({ success: false, error: 'Goal not found' });
+    memoryStore.goals[idx].currentAmount = Number(currentAmount);
+    memoryStore.saveToFile();
+    return res.json({ success: true, data: memoryStore.goals[idx] });
   } catch (err) {
     return res.status(500).json({ success: false, error: err.message });
   }
@@ -73,10 +77,16 @@ export const deleteGoal = async (req, res) => {
   try {
     const { id } = req.params;
     if (isMongoConnected) {
-      await Goal.findByIdAndDelete(id);
+      // Bug 4 fix: check if document existed before responding with success
+      const item = await Goal.findByIdAndDelete(id);
+      if (!item) return res.status(404).json({ success: false, error: 'Goal not found' });
       return res.json({ success: true, message: 'Goal removed' });
     }
+    const before = memoryStore.goals.length;
     memoryStore.goals = memoryStore.goals.filter(g => g.id !== id && g._id !== id);
+    if (memoryStore.goals.length === before) {
+      return res.status(404).json({ success: false, error: 'Goal not found' });
+    }
     memoryStore.saveToFile();
     return res.json({ success: true, message: 'Goal removed' });
   } catch (err) {

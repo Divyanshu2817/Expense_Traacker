@@ -2,16 +2,20 @@
 // In local dev, Vite proxies /api → http://localhost:5000 via vite.config.js.
 const API_BASE = import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/api` : '/api';
 
+/**
+ * Bug 2 fix: Send JWT in Authorization header instead of the spoofable x-user-id header.
+ * Token is stored in localStorage after login/register.
+ */
 const getHeaders = () => {
-  const user = JSON.parse(localStorage.getItem('aurafinance_user') || 'null');
+  const token = localStorage.getItem('aurafinance_token');
   return {
     'Content-Type': 'application/json',
-    'x-user-id': user ? user.id : 'u1'
+    ...(token ? { Authorization: `Bearer ${token}` } : {})
   };
 };
 
 export const api = {
-  // Auth
+  // Auth — public endpoints (no token needed)
   async login(email, password) {
     const res = await fetch(`${API_BASE}/auth/login`, {
       method: 'POST',

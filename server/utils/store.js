@@ -1,13 +1,18 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import bcrypt from 'bcryptjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const DATA_FILE = path.join(__dirname, 'data_fallback.json');
 
+// Pre-hash the demo user password so it is never stored as plain text.
+// Demo credentials: email=demo@aurafinance.com  password=Demo@1234
+const DEMO_PASSWORD_HASH = bcrypt.hashSync('Demo@1234', 10);
+
 const INITIAL_USERS = [
-  { id: 'u1', name: 'Demo User', email: 'demo@aurafinance.com', password: 'password123' }
+  { id: 'u1', name: 'Demo User', email: 'demo@aurafinance.com', password: DEMO_PASSWORD_HASH }
 ];
 
 const INITIAL_TRANSACTIONS = [

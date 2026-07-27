@@ -4,7 +4,7 @@ import { memoryStore } from '../utils/store.js';
 
 export const getTransactions = async (req, res) => {
   try {
-    const userId = req.headers['x-user-id'] || 'u1';
+    const userId = req.userId;
     const { category, type, search, startDate, endDate } = req.query;
 
     if (isMongoConnected) {
@@ -44,7 +44,7 @@ export const getTransactions = async (req, res) => {
 
 export const createTransaction = async (req, res) => {
   try {
-    const userId = req.headers['x-user-id'] || 'u1';
+    const userId = req.userId;
     const { description, amount, type, category, date, isRecurring, tags, paymentMethod } = req.body;
     if (amount === undefined || amount === null || !type || !category || !date) {
       return res.status(400).json({ success: false, error: 'Please provide all required fields.' });
@@ -79,16 +79,27 @@ export const createTransaction = async (req, res) => {
 export const updateTransaction = async (req, res) => {
   try {
     const { id } = req.params;
+    const userId = req.userId;
+
     if (req.body.type) {
       req.body.type = String(req.body.type).trim().toLowerCase();
     }
+
     if (isMongoConnected) {
-      const item = await Transaction.findByIdAndUpdate(id, req.body, { new: true });
+      // Bug 3 fix: filter by both _id AND userId so users can only edit their own transactions
+      const item = await Transaction.findOneAndUpdate(
+        { _id: id, userId },
+        req.body,
+        { new: true }
+      );
       if (!item) return res.status(404).json({ success: false, error: 'Transaction not found' });
       return res.json({ success: true, data: item });
     }
 
-    const idx = memoryStore.transactions.findIndex(t => t.id === id || t._id === id);
+    // Bug 3 fix: also check userId in memory store
+    const idx = memoryStore.transactions.findIndex(
+      t => (t.id === id || t._id === id) && t.userId === userId
+    );
     if (idx === -1) return res.status(404).json({ success: false, error: 'Transaction not found' });
     memoryStore.transactions[idx] = { ...memoryStore.transactions[idx], ...req.body };
     memoryStore.saveToFile();

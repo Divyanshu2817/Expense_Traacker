@@ -32,6 +32,7 @@ export function App() {
 
   // Fetch all app state from API
   const loadAppData = async () => {
+    setLoading(true); // Bug 6 fix: always set loading at start of fetch
     try {
       const [sumRes, txRes, bRes, hRes, sRes, gRes] = await Promise.all([
         api.getSummary(),
@@ -62,13 +63,13 @@ export function App() {
   // Auth Handlers
   const handleAuthSuccess = (userData) => {
     setUser(userData);
-    setLoading(true);
+    // loading state is handled by loadAppData() triggered via useEffect([user])
   };
 
   const handleLogout = () => {
     localStorage.removeItem('aurafinance_user');
+    localStorage.removeItem('aurafinance_token'); // Bug 2 fix: clear JWT on logout
     setUser(null);
-    setLoading(true);
   };
 
   // Action Handlers

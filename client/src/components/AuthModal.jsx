@@ -26,7 +26,9 @@ export function AuthModal({ isOpen, onClose, onAuthSuccess }) {
       }
 
       if (res.success) {
+        // Bug 2 fix: store JWT token so all protected API calls can use it
         localStorage.setItem('aurafinance_user', JSON.stringify(res.user));
+        localStorage.setItem('aurafinance_token', res.token);
         onAuthSuccess(res.user);
         onClose();
       } else {

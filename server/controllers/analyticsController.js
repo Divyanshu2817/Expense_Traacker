@@ -4,7 +4,7 @@ import { isMongoConnected } from '../config/db.js';
 import { memoryStore } from '../utils/store.js';
 
 const getRawData = async (req) => {
-  const userId = req.headers['x-user-id'] || 'u1';
+  const userId = req.userId;
   if (isMongoConnected) {
     const query = {
       $or: [
@@ -248,7 +248,7 @@ export const getSubscriptionRadar = async (req, res) => {
 
 export const resetSeedData = async (req, res) => {
   try {
-    const userId = req.headers['x-user-id'] || 'u1';
+    const userId = req.userId;
     memoryStore.resetSeed(userId);
     return res.json({ success: true, message: 'Sample dataset re-initialized successfully!' });
   } catch (err) {

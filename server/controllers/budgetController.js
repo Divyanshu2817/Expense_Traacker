@@ -4,7 +4,7 @@ import { memoryStore } from '../utils/store.js';
 
 export const getBudgets = async (req, res) => {
   try {
-    const userId = req.headers['x-user-id'] || 'u1';
+    const userId = req.userId;
     if (isMongoConnected) {
       const budgets = await Budget.find({ userId });
       return res.json({ success: true, data: budgets });
@@ -18,7 +18,7 @@ export const getBudgets = async (req, res) => {
 
 export const saveBudget = async (req, res) => {
   try {
-    const userId = req.headers['x-user-id'] || 'u1';
+    const userId = req.userId;
     const { category, monthlyLimit, alertThreshold } = req.body;
     if (!category || !monthlyLimit) {
       return res.status(400).json({ success: false, error: 'Category and monthly limit are required.' });
@@ -60,10 +60,16 @@ export const deleteBudget = async (req, res) => {
   try {
     const { id } = req.params;
     if (isMongoConnected) {
-      await Budget.findByIdAndDelete(id);
+      // Bug 4 fix: check if document existed before responding with success
+      const item = await Budget.findByIdAndDelete(id);
+      if (!item) return res.status(404).json({ success: false, error: 'Budget not found' });
       return res.json({ success: true, message: 'Budget removed' });
     }
+    const before = memoryStore.budgets.length;
     memoryStore.budgets = memoryStore.budgets.filter(b => b.id !== id && b._id !== id);
+    if (memoryStore.budgets.length === before) {
+      return res.status(404).json({ success: false, error: 'Budget not found' });
+    }
     memoryStore.saveToFile();
     return res.json({ success: true, message: 'Budget removed' });
   } catch (err) {

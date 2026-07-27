@@ -5,8 +5,12 @@ import {
   updateTransaction,
   deleteTransaction
 } from '../controllers/transactionController.js';
+import { protect } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
+
+// All transaction routes require a valid JWT
+router.use(protect);
 
 router.get('/', getTransactions);
 router.post('/', createTransaction);
