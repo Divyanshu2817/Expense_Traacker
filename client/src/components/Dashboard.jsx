@@ -3,7 +3,7 @@ import { TrendingUp, TrendingDown, IndianRupee, PiggyBank, ArrowUpRight, ArrowDo
 import { VisualCharts } from './VisualCharts';
 
 export function Dashboard({ summaryData, transactions, onOpenAddModal, setActiveTab }) {
-  const { totalIncome = 0, totalExpense = 0, netBalance = 0, savingsRatio = 0 } = summaryData || {};
+  const { totalIncome = 0, totalExpense = 0, netBalance = 0, savings = 0 } = summaryData?.summary || {};
 
   return (
     <div>
@@ -41,7 +41,7 @@ export function Dashboard({ summaryData, transactions, onOpenAddModal, setActive
 
         <div className="glass-card kpi-card" style={{ '--card-glow': '#6366f1' }}>
           <div className="kpi-header">
-            <span className="kpi-title">Net Liquidity Balance</span>
+            <span className="kpi-title">Money Left</span>
             <div className="kpi-icon" style={{ background: 'rgba(99, 102, 241, 0.15)', color: '#6366f1' }}>
               <IndianRupee size={22} />
             </div>
@@ -50,22 +50,22 @@ export function Dashboard({ summaryData, transactions, onOpenAddModal, setActive
             ₹{netBalance.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
           </div>
           <div className="kpi-subtext">
-            <ShieldCheck size={14} /> Liquid surplus pool
+            <ShieldCheck size={14} /> Available to spend
           </div>
         </div>
 
         <div className="glass-card kpi-card" style={{ '--card-glow': '#8b5cf6' }}>
           <div className="kpi-header">
-            <span className="kpi-title">Savings Rate</span>
+            <span className="kpi-title">Savings</span>
             <div className="kpi-icon" style={{ background: 'rgba(139, 92, 246, 0.15)', color: '#8b5cf6' }}>
               <PiggyBank size={22} />
             </div>
           </div>
           <div className="kpi-value" style={{ color: '#8b5cf6' }}>
-            {savingsRatio}%
+            ₹{savings.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
           </div>
-          <div className="kpi-subtext" style={{ color: savingsRatio >= 20 ? '#10b981' : '#f59e0b' }}>
-            <Zap size={14} /> {savingsRatio >= 20 ? 'Target Achieved (≥20%)' : 'Needs Optimization (<20%)'}
+          <div className="kpi-subtext" style={{ color: savings > 0 ? '#10b981' : '#f59e0b' }}>
+            <Zap size={14} /> {savings > 0 ? 'Surplus saved!' : 'No savings yet'}
           </div>
         </div>
       </div>

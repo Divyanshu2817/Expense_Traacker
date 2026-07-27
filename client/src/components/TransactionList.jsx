@@ -5,6 +5,8 @@ export function TransactionList({ transactions, onDeleteTransaction, onOpenAddMo
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedType, setSelectedType] = useState('All');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
 
   const categories = ['All', ...new Set(transactions.map((t) => t.category))];
 
@@ -13,13 +15,33 @@ export function TransactionList({ transactions, onDeleteTransaction, onOpenAddMo
       (t.tags && t.tags.some(tag => tag.toLowerCase().includes(search.toLowerCase())));
     const matchesCat = selectedCategory === 'All' || t.category === selectedCategory;
     const matchesType = selectedType === 'All' || t.type?.toLowerCase() === selectedType.toLowerCase();
-    return matchesSearch && matchesCat && matchesType;
+    
+    let matchesDate = true;
+    if (startDate) {
+      matchesDate = matchesDate && t.date >= startDate;
+    }
+    if (endDate) {
+      matchesDate = matchesDate && t.date <= endDate;
+    }
+
+    return matchesSearch && matchesCat && matchesType && matchesDate;
   });
+
+  const totalSpent = filtered
+    .filter(t => t.type?.toLowerCase() === 'expense')
+    .reduce((sum, t) => sum + (Number(t.amount) || 0), 0);
 
   return (
     <div className="glass-card">
       <div className="section-title">
-        <h2>Transaction History ({filtered.length})</h2>
+        <div>
+          <h2>Transaction History ({filtered.length})</h2>
+          {(startDate || endDate) && (
+            <p style={{ color: '#f43f5e', margin: '5px 0 0 0', fontWeight: '500', fontSize: '0.9rem' }}>
+              Total Spent in Range: ₹{totalSpent.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+            </p>
+          )}
+        </div>
         <button className="btn-primary" onClick={onOpenAddModal}>
           + Add Entry
         </button>
@@ -29,12 +51,12 @@ export function TransactionList({ transactions, onDeleteTransaction, onOpenAddMo
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
           gap: '12px',
           marginBottom: '20px',
         }}
       >
-        <div style={{ position: 'relative' }}>
+        <div style={{ position: 'relative', gridColumn: 'span 2' }}>
           <Search
             size={16}
             style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }}
@@ -48,6 +70,22 @@ export function TransactionList({ transactions, onDeleteTransaction, onOpenAddMo
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
+
+        <input 
+          type="date" 
+          className="form-input" 
+          value={startDate} 
+          onChange={(e) => setStartDate(e.target.value)} 
+          title="Start Date"
+        />
+        
+        <input 
+          type="date" 
+          className="form-input" 
+          value={endDate} 
+          onChange={(e) => setEndDate(e.target.value)} 
+          title="End Date"
+        />
 
         <select className="form-select" value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
           <option value="All">All Categories</option>

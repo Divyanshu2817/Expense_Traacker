@@ -2,6 +2,7 @@ import Transaction from '../models/Transaction.js';
 import Budget from '../models/Budget.js';
 import { isMongoConnected } from '../config/db.js';
 import { memoryStore } from '../utils/store.js';
+import Goal from '../models/Goal.js';
 
 const getRawData = async (req) => {
   const userId = req.userId;
@@ -16,36 +17,84 @@ const getRawData = async (req) => {
     };
     const transactions = await Transaction.find(query).sort({ date: -1 });
     const budgets = await Budget.find(query);
-    return { transactions, budgets };
+    const goals = await Goal.find(query);
+    return { transactions, budgets, goals };
   }
   const userT = memoryStore.transactions.filter(t => !t.userId || t.userId === userId || t.userId === 'u1' || t.userId === 'default_user');
   const userB = memoryStore.budgets.filter(b => !b.userId || b.userId === userId || b.userId === 'u1' || b.userId === 'default_user');
-  return { transactions: userT, budgets: userB };
+  const userG = memoryStore.goals ? memoryStore.goals.filter(g => !g.userId || g.userId === userId || g.userId === 'u1' || g.userId === 'default_user') : [];
+  return { transactions: userT, budgets: userB, goals: userG };
 };
 
 export const getSummary = async (req, res) => {
   try {
-    const { transactions } = await getRawData(req);
+    const { transactions, goals = [] } = await getRawData(req);
 
-    let totalIncome = 0;
-    let totalExpense = 0;
+    let allTimeIncome = 0;
+    let allTimeExpense = 0;
+    let currentMonthIncome = 0;
+    let currentMonthExpense = 0;
     const categoryTotals = {};
+    
+    // Determine the latest month in the dataset
+    let latestMonthKey = '';
+    transactions.forEach(t => {
+      const dateObj = new Date(t.date);
+      if (!isNaN(dateObj.getTime())) {
+        const monthKey = `${dateObj.getFullYear()}-${String(dateObj.getMonth() + 1).padStart(2, '0')}`;
+        if (monthKey > latestMonthKey) {
+          latestMonthKey = monthKey;
+        }
+      }
+    });
+    if (!latestMonthKey) {
+      const now = new Date();
+      latestMonthKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+    }
 
     transactions.forEach(t => {
       const amt = Number(t.amount) || 0;
       const tType = String(t.type || '').trim().toLowerCase();
+      
+      const dateObj = new Date(t.date);
+      const isCurrentMonth = !isNaN(dateObj.getTime()) && 
+                             `${dateObj.getFullYear()}-${String(dateObj.getMonth() + 1).padStart(2, '0')}` === latestMonthKey;
+
       if (tType === 'income') {
-        totalIncome += amt;
+        allTimeIncome += amt;
+        if (isCurrentMonth) currentMonthIncome += amt;
       } else if (tType === 'expense') {
-        totalExpense += amt;
+        allTimeExpense += amt;
+        if (isCurrentMonth) currentMonthExpense += amt;
         if (t.category) {
           categoryTotals[t.category] = (categoryTotals[t.category] || 0) + amt;
         }
       }
     });
 
-    const netBalance = totalIncome - totalExpense;
-    const savingsRatio = totalIncome > 0 ? Math.max(0, ((totalIncome - totalExpense) / totalIncome) * 100) : 0;
+    const totalGoalsFunded = goals.reduce((acc, goal) => acc + (Number(goal.currentAmount) || 0), 0);
+    const allTimeNetBalance = allTimeIncome - allTimeExpense;
+    
+    // Past months' money left is everything that is NOT current month
+    const pastMonthsSavings = allTimeNetBalance - (currentMonthIncome - currentMonthExpense);
+    
+    // Deduct funded goals from past savings
+    const remainingPastSavings = pastMonthsSavings - totalGoalsFunded;
+    
+    let savings = 0;
+    let currentMonthMoneyLeft = currentMonthIncome - currentMonthExpense;
+    
+    if (remainingPastSavings < 0) {
+      // Goal funding exceeded past savings, dip into current month's money left
+      savings = 0;
+      currentMonthMoneyLeft += remainingPastSavings; 
+    } else {
+      savings = remainingPastSavings;
+    }
+
+    const totalIncome = currentMonthIncome;
+    const totalExpense = currentMonthExpense;
+    const netBalance = currentMonthMoneyLeft;
 
     // Monthly breakdown data for Chart.js
     const monthlyMap = {};
@@ -80,7 +129,7 @@ export const getSummary = async (req, res) => {
         totalIncome,
         totalExpense,
         netBalance,
-        savingsRatio: Number(savingsRatio.toFixed(1)),
+        savings,
         transactionCount: transactions.length
       },
       categoryBreakdown: categoryTotals,
