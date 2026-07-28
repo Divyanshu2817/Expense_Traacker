@@ -56,6 +56,11 @@ export function App() {
     }
   };
 
+  // Ping backend on mount to wake it up (Render free-tier cold-start fix)
+  useEffect(() => {
+    api.keepAlive();
+  }, []);
+
   useEffect(() => {
     loadAppData();
   }, [user]);

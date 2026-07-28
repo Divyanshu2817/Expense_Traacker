@@ -35,7 +35,14 @@ export function AuthModal({ isOpen, onClose, onAuthSuccess }) {
         setError(res.error || 'Authentication failed');
       }
     } catch (err) {
-      setError(err.message || 'Server connection error');
+      // "Failed to fetch" = network error (CORS block, server sleeping, no internet)
+      const isFetchError = err.message?.toLowerCase().includes('failed to fetch')
+        || err.message?.toLowerCase().includes('network');
+      setError(
+        isFetchError
+          ? 'Cannot reach the server. The backend may be waking from sleep (≈ 30​seconds on Render free tier). Please wait a moment and try again.'
+          : err.message || 'Server connection error'
+      );
     } finally {
       setLoading(false);
     }

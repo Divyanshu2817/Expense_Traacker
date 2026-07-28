@@ -145,5 +145,17 @@ export const api = {
       headers: getHeaders()
     });
     return await res.json();
+  },
+
+  /**
+   * Silent ping — call this on app load so Render's free-tier backend
+   * wakes up before the user needs to authenticate.
+   */
+  async keepAlive() {
+    try {
+      await fetch(`${API_BASE}/health`, { method: 'GET' });
+    } catch (_) {
+      // Ignore — backend might be starting up
+    }
   }
 };
