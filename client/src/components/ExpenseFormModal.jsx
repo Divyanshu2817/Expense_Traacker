@@ -133,7 +133,7 @@ export function ExpenseFormModal({ isOpen, onClose, onSubmit }) {
           )}
 
           {/* Amount & Category */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
+          <div className="form-grid-2">
             <div className="form-group">
               <label>Amount (₹)</label>
               <input

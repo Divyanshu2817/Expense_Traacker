@@ -16,7 +16,7 @@ export function BudgetManager({ budgets, summaryData, onSaveBudget, onDeleteBudg
   };
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: '20px' }}>
+    <div className="budget-grid">
       {/* Create / Edit Budget Form */}
       <div className="glass-card">
         <div className="section-title">
@@ -66,7 +66,7 @@ export function BudgetManager({ budgets, summaryData, onSaveBudget, onDeleteBudg
       </div>
 
       {/* Budget Progress List */}
-      <div className="glass-card" style={{ gridColumn: 'span 2' }}>
+      <div className="glass-card budget-list-panel">
         <div className="section-title">
           <h2>Budget Target Progress</h2>
         </div>
@@ -98,8 +98,8 @@ export function BudgetManager({ budgets, summaryData, onSaveBudget, onDeleteBudg
                     padding: '16px 20px',
                   }}
                 >
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <div className="budget-item-header">
+                    <div className="budget-item-info">
                       <span style={{ fontWeight: 700, fontSize: '1rem' }}>{b.category}</span>
                       {isOver && (
                         <span className="badge badge-expense" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
@@ -117,7 +117,7 @@ export function BudgetManager({ budgets, summaryData, onSaveBudget, onDeleteBudg
                         </span>
                       )}
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <div className="budget-item-amount">
                       <span style={{ fontWeight: 700, color: statusColor }}>
                         ₹{spent.toLocaleString('en-IN', { minimumFractionDigits: 2 })} / ₹{limit.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                       </span>

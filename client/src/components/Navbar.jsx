@@ -295,6 +295,44 @@ export function Navbar({
           .af-tab span:not(.af-badge) { display: none; }
           .af-btn-primary span, .af-btn-outline span { display: none; }
         }
+
+        /* ── Tablet: tabs wrap to their own row ── */
+        @media (max-width: 640px) {
+          .af-navbar {
+            flex-wrap: wrap;
+            padding: 10px 14px;
+            gap: 8px;
+          }
+          .af-brand { flex: 1 1 auto; min-width: 0; }
+          .af-tabs {
+            order: 3;
+            flex: 0 0 100%;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            padding-top: 8px;
+            margin-top: 2px;
+          }
+          .af-actions { flex-shrink: 0; gap: 6px; }
+        }
+
+        /* ── Small phones ── */
+        @media (max-width: 480px) {
+          .af-navbar { padding: 8px 12px; }
+          .af-brand-mark { width: 30px; height: 30px; border-radius: 8px; }
+          .af-brand-text { font-size: 0.9rem; }
+          .af-chip {
+            font-size: 0.72rem;
+            padding: 4px 10px 4px 4px;
+            max-width: 110px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+          .af-avatar { width: 20px; height: 20px; font-size: 0.6rem; }
+          .af-icon-btn { width: 30px; height: 30px; border-radius: 8px; }
+          .af-btn-primary { padding: 7px 10px; font-size: 0.8rem; border-radius: 8px; }
+          .af-btn-outline { padding: 7px 10px; font-size: 0.8rem; border-radius: 8px; }
+          .af-tab { padding: 6px 9px; font-size: 0.78rem; border-radius: 8px; gap: 5px; }
+        }
       `}</style>
 
       <header className={`af-navbar ${scrolled ? 'scrolled' : ''}`}>

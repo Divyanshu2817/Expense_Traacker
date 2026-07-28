@@ -145,7 +145,7 @@ export function VisualCharts({ summaryData, mode = 'all' }) {
   }
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(380px, 1fr))', gap: '20px' }}>
+    <div className="charts-all-grid">
       <div className="glass-card">
         <div className="section-title">
           <h2>Category Breakdown</h2>
@@ -164,7 +164,7 @@ export function VisualCharts({ summaryData, mode = 'all' }) {
         </div>
       </div>
 
-      <div className="glass-card" style={{ gridColumn: '1 / -1' }}>
+      <div className="glass-card charts-full-row">
         <div className="section-title">
           <h2>Cash Flow Spending Trajectory</h2>
         </div>

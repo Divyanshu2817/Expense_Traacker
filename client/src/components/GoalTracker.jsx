@@ -39,7 +39,7 @@ export function GoalTracker({ goals, onCreateGoal, onUpdateGoalProgress, onDelet
   };
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '20px' }}>
+    <div className="goals-grid">
       {/* Goal Creation Card */}
       <div className="glass-card">
         <div className="section-title">
@@ -58,7 +58,7 @@ export function GoalTracker({ goals, onCreateGoal, onUpdateGoalProgress, onDelet
             />
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+          <div className="form-grid-2-sm">
             <div className="form-group">
               <label>Target Amount (₹)</label>
               <input
@@ -100,7 +100,7 @@ export function GoalTracker({ goals, onCreateGoal, onUpdateGoalProgress, onDelet
       </div>
 
       {/* Goals Progress Meters */}
-      <div className="glass-card" style={{ gridColumn: 'span 2' }}>
+      <div className="glass-card goals-list-panel">
         <div className="section-title">
           <h2>Active Financial Milestones ({goals.length})</h2>
         </div>
@@ -127,8 +127,8 @@ export function GoalTracker({ goals, onCreateGoal, onUpdateGoalProgress, onDelet
                     padding: '20px',
                   }}
                 >
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <div className="goal-item-header">
+                    <div className="goal-item-info">
                       <div
                         style={{
                           width: '40px',
@@ -151,7 +151,7 @@ export function GoalTracker({ goals, onCreateGoal, onUpdateGoalProgress, onDelet
                       </div>
                     </div>
 
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <div className="goal-item-actions">
                       <button className="btn-secondary" style={{ padding: '6px 12px', fontSize: '0.8rem' }} onClick={() => handleAddDeposit(g, 1000)}>
                         +₹1,000
                       </button>

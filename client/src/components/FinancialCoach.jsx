@@ -20,7 +20,7 @@ export function FinancialCoach({ healthData, summaryData }) {
   const newSavingsRatioSim = totalIncome > 0 ? Math.min(100, (((totalIncome - newExpenseSim) / totalIncome) * 100)) : 0;
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: '20px' }}>
+    <div className="coach-grid">
       {/* 0-100 Score Card */}
       <div className="glass-card" style={{ textAlign: 'center' }}>
         <div className="section-title" style={{ justifyContent: 'center' }}>
@@ -110,7 +110,7 @@ export function FinancialCoach({ healthData, summaryData }) {
       </div>
 
       {/* What-If Scenario Planner */}
-      <div className="glass-card" style={{ gridColumn: '1 / -1' }}>
+      <div className="glass-card coach-simulator">
         <div className="section-title">
           <h2>
             <Sliders size={20} style={{ color: '#10b981', verticalAlign: 'middle', marginRight: '6px' }} />

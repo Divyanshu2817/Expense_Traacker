@@ -5,7 +5,7 @@ export function SubscriptionRadar({ subData, onOpenAddModal }) {
   const { subscriptionCount = 0, monthlyTotal = 0, yearlyTotal = 0, potentialAnnualSavings = 0, subscriptions = [] } = subData || {};
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '20px' }}>
+    <div className="sub-radar-grid">
       {/* Overview Cards */}
       <div className="glass-card" style={{ background: 'linear-gradient(135deg, rgba(244,63,94,0.1), rgba(15,23,42,0.8))', border: '1px solid rgba(244,63,94,0.3)' }}>
         <div className="kpi-header">
@@ -47,7 +47,7 @@ export function SubscriptionRadar({ subData, onOpenAddModal }) {
       </div>
 
       {/* Subscription List */}
-      <div className="glass-card" style={{ gridColumn: '1 / -1' }}>
+      <div className="glass-card sub-list-panel">
         <div className="section-title">
           <h2>Detected Subscription Radar Log</h2>
           <button className="btn-secondary" onClick={onOpenAddModal}>

@@ -71,7 +71,7 @@ export function Dashboard({ summaryData, transactions, onOpenAddModal, setActive
       </div>
 
       {/* Visual Analytics Quick View */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '20px', marginBottom: '28px' }}>
+      <div className="charts-quick-grid">
         <div className="glass-card">
           <div className="section-title">
             <h2>Cash Flow Trend</h2>
